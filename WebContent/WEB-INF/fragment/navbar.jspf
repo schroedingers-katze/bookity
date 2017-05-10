@@ -1,0 +1,39 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <a href="${pageContext.request.contextPath}" class="navbar-brand" id="bookity">
+        <img src="culture_512pxGREY.png" width=40 height=40 style="display: inline-block;">
+        <span style=" display: inline-block; font-family: final; font-size: 40px;">
+        bookity
+        </span>
+        </a>
+         
+        <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
+            <span class="glyphicon glyphicon-list"></span>
+        </button>
+ 
+        <div class="collapse navbar-collapse navHeaderCollapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="${pageContext.request.contextPath}/add">Add a book!</a></li>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.user}">
+                        <li class="dropdown">
+				          <a class="dropdown-toggle" data-toggle="dropdown" href="#">User panel<span class="caret"></span></a>
+				          <ul class="dropdown-menu">
+				            <li><a href="${pageContext.request.contextPath}/password">Change your password</a></li>
+				            <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>				            
+				            
+				          </ul>
+				        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li><a href="${pageContext.request.contextPath}/register">Sign up</a></li>
+                        <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
+                    </c:otherwise>
+                </c:choose>
+            </ul>
+        </div>
+ 
+    </div>
+</nav>
