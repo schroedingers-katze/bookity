@@ -1,0 +1,113 @@
+-- -----------------------------------------------------
+-- Schema bookity
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `bookity` DEFAULT CHARACTER SET utf8 ;
+USE `bookity` ;
+
+-- -----------------------------------------------------
+-- Table `bookity`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bookity`.`user` (
+  `user_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(60) NOT NULL,
+  `is_active` TINYINT(1) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 0
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `bookity`.`book`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bookity`.`book` (
+  `book_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(100) NOT NULL,
+  `description` VARCHAR(2500) NOT NULL,
+  `author` VARCHAR(50) NOT NULL,
+  `user_id` INT(11) NOT NULL,
+  `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `up_vote` INT(11) NOT NULL,
+  `down_vote` INT(11) NOT NULL,
+  `publisher` VARCHAR(45) NULL DEFAULT NULL,
+  `photo` MEDIUMBLOB NULL DEFAULT NULL,
+  `checking` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`book_id`, `user_id`),
+  UNIQUE INDEX `discovery_id_UNIQUE` (`book_id` ASC),
+  INDEX `fk_discovery_user_idx` (`user_id` ASC),
+  CONSTRAINT `fk_discovery_user`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `bookity`.`user` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 0
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `bookity`.`role`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bookity`.`role` (
+  `role_name` VARCHAR(45) NOT NULL,
+  `description` VARCHAR(120) NULL DEFAULT NULL,
+  PRIMARY KEY (`role_name`),
+  UNIQUE INDEX `role_name_UNIQUE` (`role_name` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `bookity`.`user_role`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bookity`.`user_role` (
+  `role_name` VARCHAR(45) NOT NULL DEFAULT 'user',
+  `username` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`role_name`, `username`),
+  INDEX `fk_role_has_user_role1_idx` (`role_name` ASC),
+  INDEX `fk_user_role_user_username_idx` (`username` ASC),
+  CONSTRAINT `fk_role_has_user_role1`
+    FOREIGN KEY (`role_name`)
+    REFERENCES `bookity`.`role` (`role_name`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `bookity`.`vote`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bookity`.`vote` (
+  `vote_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `book_id` INT(11) NOT NULL,
+  `user_id` INT(11) NOT NULL,
+  `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `type` VARCHAR(30) NULL DEFAULT NULL,
+  PRIMARY KEY (`vote_id`, `book_id`, `user_id`),
+  INDEX `book_id_idx` (`book_id` ASC),
+  INDEX `useriddd_idx` (`user_id` ASC),
+  CONSTRAINT `bookiddd`
+    FOREIGN KEY (`book_id`)
+    REFERENCES `bookity`.`book` (`book_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `useriddd`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `bookity`.`user` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO bookity.role VALUES('user', 'add new discovery');
+INSERT INTO bookity.role VALUES('admin', 'all privigilesuser_role');
